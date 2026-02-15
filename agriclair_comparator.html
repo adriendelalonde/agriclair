@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparateur de Statuts Juridiques - AgriClair</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght:700;900&family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --green-primary: #2d5016;
+            --green-light: #5a8f3a;
+            --green-accent: #7cb342;
+            --cream: #faf8f3;
+            --sand: #e8e4d9;
+            --brown: #4a3f35;
+            --gold: #d4af37;
+            --blue: #4a90e2;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--brown);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--sand);
+        }
+        
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--green-primary);
+        }
+        
+        .logo::before {
+            content: '🌾 ';
+        }
+        
+        .breadcrumb {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .breadcrumb a {
+            color: var(--green-primary);
+            text-decoration: none;
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--green-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+        }
+        
+        .filter-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+        
+        .filter-section h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--green-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .filter-item {
+            background: var(--cream);
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-item:hover {
+            border-color: var(--green-accent);
+            transform: translateY(-3px);
+        }
+        
+        .filter-item input[type="checkbox"] {
+            margin-right: 0.8rem;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .filter-item label {
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: var(--green-primary);
+            color: white;
+        }
+        
+        th {
+            padding: 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        th:first-child {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid var(--sand);
+            transition: background 0.2s;
+        }
+        
+        tbody tr:hover {
+            background: var(--cream);
+        }
+        
+        td {
+            padding: 1.5rem;
+        }
+        
+        td:first-child {
+            font-weight: 600;
+            color: var(--green-primary);
+            background: var(--cream);
+        }
+        
+        .check-yes {
+            color: var(--green-accent);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .check-no {
+            color: #e74c3c;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .info-badge {
+            background: var(--blue);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .warning-badge {
+            background: var(--gold);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .details-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .detail-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+        
+        .detail-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--green-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .detail-card h4 {
+            color: var(--green-light);
+            margin: 1.5rem 0 0.8rem;
+            font-size: 1.2rem;
+        }
+        
+        .detail-card ul {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .detail-card li {
+            padding: 0.6rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .detail-card li::before {
+            content: '→';
+            color: var(--green-accent);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .cta-box {
+            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .cta-box h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-box p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .btn-white {
+            background: white;
+            color: var(--green-primary);
+            padding: 1.2rem 2.5rem;
+            border-radius: 35px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: inline-block;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-white:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">AgriClair</div>
+            <div class="breadcrumb">
+                <a href="agriclair_landing.html">Accueil</a> / <a href="#">Comparateurs</a> / Statuts juridiques
+            </div>
+        </header>
+        
+        <h1>Comparateur de Statuts Juridiques</h1>
+        <p class="subtitle">Comparez les différentes formes juridiques et trouvez celle qui convient le mieux à votre projet agricole</p>
+        
+        <div class="filter-section">
+            <h3>🔍 Filtrez selon votre situation</h3>
+            <div class="filter-grid">
+                <div class="filter-item" onclick="toggleFilter('solo')">
+                    <input type="checkbox" id="solo">
+                    <label for="solo">Exploitation solo</label>
+                </div>
+                <div class="filter-item" onclick="toggleFilter('associes')">
+                    <input type="checkbox" id="associes" checked>
+                    <label for="associes">Avec associés</label>
+                </div>
+                <div class="filter-item" onclick="toggleFilter('famille')">
+                    <input type="checkbox" id="famille">
+                    <label for="famille">Exploitation familiale</label>
+                </div>
+                <div class="filter-item" onclick="toggleFilter('transmission')">
+                    <input type="checkbox" id="transmission">
+                    <label for="transmission">Transmission prévue</label>
+                </div>
+                <div class="filter-item" onclick="toggleFilter('diversification')">
+                    <input type="checkbox" id="diversification">
+                    <label for="diversification">Diversification</label>
+                </div>
+                <div class="filter-item" onclick="toggleFilter('protection')">
+                    <input type="checkbox" id="protection">
+                    <label for="protection">Protection patrimoine</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Critère</th>
+                        <th>Exploitation Individuelle</th>
+                        <th>EARL</th>
+                        <th>GAEC</th>
+                        <th>SCEA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nombre d'associés</td>
+                        <td>1 seul exploitant</td>
+                        <td>1 à 10 associés<br><span class="info-badge">Max 50% EARL unipersonnelle</span></td>
+                        <td>2 à 10 associés<br><span class="info-badge">Membres de la famille ou non</span></td>
+                        <td>2 associés minimum<br><span class="info-badge">Pas de limite</span></td>
+                    </tr>
+                    <tr>
+                        <td>Responsabilité</td>
+                        <td>Illimitée<br><span class="warning-badge">Patrimoine personnel engagé</span></td>
+                        <td>Limitée aux apports<br><span class="info-badge">Sauf EARL unipersonnelle</span></td>
+                        <td>Conjointe et solidaire</td>
+                        <td>Limitée aux apports</td>
+                    </tr>
+                    <tr>
+                        <td>Capital minimum</td>
+                        <td>Aucun</td>
+                        <td>7 500€<br><span class="info-badge">Libération immédiate</span></td>
+                        <td>1 500€ par associé</td>
+                        <td>Aucun</td>
+                    </tr>
+                    <tr>
+                        <td>Régime fiscal</td>
+                        <td>Impôt sur le revenu (IR)</td>
+                        <td>IR ou IS (option)<br><span class="info-badge">Flexibilité</span></td>
+                        <td>IR (transparence fiscale)</td>
+                        <td>IR ou IS</td>
+                    </tr>
+                    <tr>
+                        <td>Régime social</td>
+                        <td>MSA non-salarié</td>
+                        <td>MSA non-salarié<br><span class="info-badge">+ salariés si besoin</span></td>
+                        <td>MSA non-salarié</td>
+                        <td>MSA ou régime général<br><span class="warning-badge">Selon cas</span></td>
+                    </tr>
+                    <tr>
+                        <td>Aides PAC</td>
+                        <td><span class="check-yes">✓</span> 100%</td>
+                        <td><span class="check-yes">✓</span> 100%</td>
+                        <td><span class="check-yes">✓</span> Transparence<br><span class="info-badge">1 DPB par associé</span></td>
+                        <td><span class="check-yes">✓</span> Sous conditions</td>
+                    </tr>
+                    <tr>
+                        <td>Formalités création</td>
+                        <td><span class="check-yes">✓</span> Simplifiées</td>
+                        <td><span class="check-no">✗</span> Statuts + immatriculation</td>
+                        <td><span class="check-no">✗</span> Statuts + agrément préfectoral</td>
+                        <td><span class="check-no">✗</span> Statuts + immatriculation</td>
+                    </tr>
+                    <tr>
+                        <td>Comptabilité</td>
+                        <td>Simplifiée ou réelle</td>
+                        <td>Commerciale obligatoire</td>
+                        <td>Commerciale obligatoire</td>
+                        <td>Commerciale obligatoire</td>
+                    </tr>
+                    <tr>
+                        <td>Transmission</td>
+                        <td>Difficile<br><span class="warning-badge">Cession fond</span></td>
+                        <td>Facilitée<br><span class="check-yes">✓</span> Cession parts sociales</td>
+                        <td>Facilitée en famille<br><span class="info-badge">Agrément associés</span></td>
+                        <td>Facilitée<br><span class="check-yes">✓</span> Cession parts</td>
+                    </tr>
+                    <tr>
+                        <td>Investisseurs extérieurs</td>
+                        <td><span class="check-no">✗</span> Non</td>
+                        <td><span class="check-yes">✓</span> Possible (max 50%)</td>
+                        <td><span class="check-no">✗</span> Non<br><span class="warning-badge">Exploitants uniquement</span></td>
+                        <td><span class="check-yes">✓</span> Oui<br><span class="info-badge">Sans limite</span></td>
+                    </tr>
+                    <tr>
+                        <td>Coût annuel estimé</td>
+                        <td>500-1 500€<br><small>Comptabilité</small></td>
+                        <td>2 500-4 000€<br><small>Expert-comptable</small></td>
+                        <td>2 500-4 000€<br><small>Expert-comptable</small></td>
+                        <td>3 000-5 000€<br><small>Expert-comptable</small></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="details-section">
+            <div class="detail-card">
+                <h3>🌾 Exploitation Individuelle</h3>
+                <h4>Points forts</h4>
+                <ul>
+                    <li>Simplicité administrative maximale</li>
+                    <li>Aucun capital minimum requis</li>
+                    <li>Décisions en totale autonomie</li>
+                    <li>Charges sociales adaptées aux petits revenus</li>
+                    <li>Formalités de création légères</li>
+                </ul>
+                <h4>Points de vigilance</h4>
+                <ul>
+                    <li>Patrimoine personnel non protégé</li>
+                    <li>Difficultés pour transmettre l'exploitation</li>
+                    <li>Capacité d'investissement limitée</li>
+                    <li>Pas de séparation personne/entreprise</li>
+                </ul>
+                <h4>Idéal pour</h4>
+                <ul>
+                    <li>Jeune installation avec activité modeste</li>
+                    <li>Exploitation de petite taille</li>
+                    <li>Agriculteur souhaitant rester seul</li>
+                    <li>Activité complémentaire</li>
+                </ul>
+            </div>
+            
+            <div class="detail-card">
+                <h3>🏢 EARL (Entreprise Agricole à Responsabilité Limitée)</h3>
+                <h4>Points forts</h4>
+                <ul>
+                    <li>Responsabilité limitée aux apports</li>
+                    <li>Patrimoine personnel protégé</li>
+                    <li>Flexibilité : 1 à 10 associés</li>
+                    <li>Option IS ou IR selon besoins</li>
+                    <li>Transmission facilitée (parts sociales)</li>
+                    <li>Possibilité d'investisseurs (max 50%)</li>
+                </ul>
+                <h4>Points de vigilance</h4>
+                <ul>
+                    <li>Capital minimum : 7 500€</li>
+                    <li>Comptabilité commerciale obligatoire</li>
+                    <li>Formalités de création plus lourdes</li>
+                    <li>Coûts comptables annuels significatifs</li>
+                </ul>
+                <h4>Idéal pour</h4>
+                <ul>
+                    <li>Exploitations moyennes à grandes</li>
+                    <li>Projet nécessitant des investisseurs</li>
+                    <li>Volonté de protéger patrimoine familial</li>
+                    <li>Transmission progressive envisagée</li>
+                </ul>
+            </div>
+            
+            <div class="detail-card">
+                <h3>👨‍👩‍👧‍👦 GAEC (Groupement Agricole d'Exploitation en Commun)</h3>
+                <h4>Points forts</h4>
+                <ul>
+                    <li>Transparence fiscale (pas d'IS)</li>
+                    <li>Transparence PAC (1 DPB par associé)</li>
+                    <li>Mutualisation du travail et du matériel</li>
+                    <li>Idéal pour exploitations familiales</li>
+                    <li>Reconnaissance du travail de chaque associé</li>
+                </ul>
+                <h4>Points de vigilance</h4>
+                <ul>
+                    <li>Responsabilité conjointe et solidaire</li>
+                    <li>Agrément préfectoral obligatoire</li>
+                    <li>Tous les associés doivent participer au travail</li>
+                    <li>Pas d'investisseurs extérieurs possibles</li>
+                    <li>Nombre de parts limité par associé</li>
+                </ul>
+                <h4>Idéal pour</h4>
+                <ul>
+                    <li>Association familiale (parents-enfants, frères)</li>
+                    <li>Volonté de mutualiser le travail</li>
+                    <li>Optimisation des aides PAC</li>
+                    <li>Transmission progressive aux enfants</li>
+                </ul>
+            </div>
+            
+            <div class="detail-card">
+                <h3>💼 SCEA (Société Civile d'Exploitation Agricole)</h3>
+                <h4>Points forts</h4>
+                <ul>
+                    <li>Grande souplesse de fonctionnement</li>
+                    <li>Responsabilité limitée aux apports</li>
+                    <li>Investisseurs extérieurs sans limite</li>
+                    <li>Pas de capital minimum</li>
+                    <li>Choix IR ou IS</li>
+                    <li>Associés non exploitants possibles</li>
+                </ul>
+                <h4>Points de vigilance</h4>
+                <ul>
+                    <li>Complexité juridique et fiscale</li>
+                    <li>Aides PAC sous conditions strictes</li>
+                    <li>Risque de perte du caractère agricole</li>
+                    <li>Comptabilité commerciale obligatoire</li>
+                    <li>Peut être requalifiée commerciale</li>
+                </ul>
+                <h4>Idéal pour</h4>
+                <ul>
+                    <li>Projets nécessitant capitaux importants</li>
+                    <li>Diversification non agricole</li>
+                    <li>Association avec non-exploitants</li>
+                    <li>Grandes exploitations</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="cta-box">
+            <h2>Besoin d'un conseil personnalisé ?</h2>
+            <p>Nos experts en droit rural analysent votre situation et vous recommandent le statut le plus adapté</p>
+            <button class="btn-white" onclick="alert('Prise de rendez-vous Expert - Fonctionnalité en développement')">
+                Prendre rendez-vous avec un conseiller
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function toggleFilter(id) {
+            const checkbox = document.getElementById(id);
+            checkbox.checked = !checkbox.checked;
+            applyFilters();
+        }
+        
+        function applyFilters() {
+            // Logique de filtrage (à développer selon besoins)
+            console.log('Filtres appliqués');
+        }
+    </script>
+</body>
+</html>
